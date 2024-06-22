@@ -13,7 +13,7 @@ Funcionalidades principales
 
 ## Código - Keypad.cs
 
-´´´
+'''
 
 public class Keypad : MonoBehaviour
 {
@@ -49,7 +49,7 @@ public class Keypad : MonoBehaviour
     }
 }
 
-´´´
+'''
 
 ## Características
 
