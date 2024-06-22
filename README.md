@@ -13,17 +13,7 @@ Funcionalidades principales
 
 ## Código - Keypad.cs
 
-'''
-
-public class Keypad : MonoBehaviour
-{
-    [SerializeField] private Text displayText;
-    [SerializeField] private Animator doorAnimator;
-
-    private string correctCode = "123456";
-
-
-    public void EnterDigit(int digit)
+public void EnterDigit(int digit)
     {
         displayText.text += digit.ToString();
     }
@@ -47,9 +37,7 @@ public class Keypad : MonoBehaviour
         yield return new WaitForSeconds(2f);
         doorAnimator.SetBool("Open", false);
     }
-}
 
-'''
 
 ## Características
 
