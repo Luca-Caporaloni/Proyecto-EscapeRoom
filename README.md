@@ -12,9 +12,8 @@
 
 
 ## Código - Keypad.cs
+
 ´´´
-csharp
-Copiar código
 using UnityEngine;
 using UnityEngine.UI;
 
