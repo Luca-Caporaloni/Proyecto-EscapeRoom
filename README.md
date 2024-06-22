@@ -2,7 +2,7 @@
 
 ## Uso
 
-- Funcionalidades principales
+Funcionalidades principales
 
 - Puzzles Interactivos: Los jugadores pueden interactuar con objetos del entorno para descubrir pistas.
 
@@ -14,14 +14,14 @@
 ## Código - Keypad.cs
 
 ´´´
-using UnityEngine;
-using UnityEngine.UI;
 
 public class Keypad : MonoBehaviour
 {
     [SerializeField] private Text displayText;
     [SerializeField] private Animator doorAnimator;
+
     private string correctCode = "123456";
+
 
     public void EnterDigit(int digit)
     {
@@ -48,6 +48,7 @@ public class Keypad : MonoBehaviour
         doorAnimator.SetBool("Open", false);
     }
 }
+
 ´´´
 
 ## Características
