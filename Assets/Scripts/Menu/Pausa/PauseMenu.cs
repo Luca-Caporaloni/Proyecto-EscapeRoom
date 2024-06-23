@@ -1,7 +1,10 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+
+    public string mainMenuSceneName = "MainMenu";
 
     public FirstPersonMovement movementScript; // Referencia al script de movimiento del jugador
     public FirstPersonLook lookScript; // Referencia al script de mirada del jugador
@@ -64,10 +67,9 @@ public class PauseMenu : MonoBehaviour
         isPaused = true;
     }
 
-    public void QuitGame()
+    public void MainMenu()
     {
-        // Aquí puedes agregar código para salir del juego
-        Debug.Log("Quitting game...");
-        Application.Quit();
+        Time.timeScale = 1f; 
+        SceneManager.LoadScene(mainMenuSceneName);
     }
 }
