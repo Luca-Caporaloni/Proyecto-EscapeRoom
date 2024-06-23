@@ -13,12 +13,11 @@ public class Keypad : MonoBehaviour
     [SerializeField] private AudioClip doorOpenSound; // Sonido de apertura de la puerta
     [SerializeField] private Transform player; // Referencia al transform del jugador
 
-        
+    public Text interactionText; // Referencia al texto de interacción (Usar)
+
     private RigidbodyConstraints originalConstraints;
-
-    private string Answer = "123456";
+    private string Answer = "929571";
     private bool doorOpen = false;
-
     private Rigidbody playerRigidbody;
 
     void Start()
@@ -35,7 +34,6 @@ public class Keypad : MonoBehaviour
 
     public void Execute()
     {
-
         if (Ans.text == Answer)
         {
             Ans.text = "Correct";
@@ -66,13 +64,14 @@ public class Keypad : MonoBehaviour
     // Método para mostrar el canvas del keypad
     public void ShowKeypad()
     {
-
         keypadCanvas.SetActive(true);
         Ans.text = ""; // Limpiar el campo de texto al mostrar el canvas
         Cursor.lockState = CursorLockMode.None; // Desbloquear el cursor para inspección
         Cursor.visible = true; // Hacer visible el cursor
         movementScript.enabled = false; // Desactivar el movimiento del jugador
         lookScript.enabled = false; // Desactivar la rotación de la cámara
+
+        interactionText.gameObject.SetActive(false);
 
         // Congelar el Rigidbody del jugador
         playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
@@ -88,7 +87,7 @@ public class Keypad : MonoBehaviour
         lookScript.enabled = true; // Reactivar la rotación de la cámara
 
         // Liberar las restricciones del Rigidbody del jugador, solo congelar rotación y posición Z
-        playerRigidbody.constraints = originalConstraints;      
+        playerRigidbody.constraints = originalConstraints;
     }
 
     // Método para cancelar la interacción con el keypad

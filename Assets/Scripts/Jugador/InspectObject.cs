@@ -1,12 +1,14 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class InspectObject : MonoBehaviour
 {
-    public float interactionDistance = 3f; // Distancia máxima para interactuar
+    public float interactionDistance = 1f; // Distancia máxima para interactuar
     public Transform inspectPosition; // Posición donde el objeto será inspeccionado
     public Transform player; // Referencia al objeto del jugador
     public FirstPersonMovement movementScript; // Referencia al script de movimiento del jugador
     public FirstPersonLook lookScript; // Referencia al script de mirada del jugador
+    public Text inspectText; // Referencia al texto de inspección
     public float rotationSpeed = 300f; // Velocidad de rotación del objeto
 
     private Camera playerCamera;
@@ -22,53 +24,68 @@ public class InspectObject : MonoBehaviour
         playerCamera = Camera.main;
         playerRigidbody = player.GetComponent<Rigidbody>();
         originalConstraints = playerRigidbody.constraints;
+        inspectText.gameObject.SetActive(false); // Asegúrate de que el texto esté inicialmente desactivado
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.F)) // Presiona F para interactuar
+        if (isInspecting)
         {
-            if (isInspecting)
+            if (Input.GetKeyDown(KeyCode.F)) // Presiona F para dejar de inspeccionar
             {
                 ReleaseObject();
             }
-            else
+            if (Input.GetMouseButton(0))
             {
-                TryPickObject();
+                RotateObject();
             }
         }
-
-        if (isInspecting && currentObject != null && Input.GetMouseButton(0))
+        else
         {
-            RotateObject();
+            Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, interactionDistance))
+            {
+                if (hit.collider.gameObject.CompareTag("Inspectable"))
+                {
+                    inspectText.gameObject.SetActive(true); // Mostrar texto "Inspeccionar"
+                    inspectText.text = "(F) Inspeccionar"; // Actualizar el texto
+                    if (Input.GetKeyDown(KeyCode.F)) // Presiona F para interactuar
+                    {
+                        TryPickObject(hit.collider.gameObject);
+                    }
+                }
+                else
+                {
+                    inspectText.gameObject.SetActive(false); // Ocultar texto si no está mirando un objeto inspeccionable
+                }
+            }
+            else
+            {
+                inspectText.gameObject.SetActive(false); // Ocultar texto si no está mirando ningún objeto
+            }
         }
     }
 
-    void TryPickObject()
+    void TryPickObject(GameObject obj)
     {
-        Ray ray = playerCamera.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
+        currentObject = obj;
+        originalPosition = currentObject.transform.position;
+        originalRotation = currentObject.transform.rotation;
+        currentObject.GetComponent<Rigidbody>().isKinematic = true;
+        currentObject.transform.position = inspectPosition.position;
+        currentObject.transform.rotation = inspectPosition.rotation;
+        isInspecting = true;
+        movementScript.enabled = false; // Desactivar el movimiento del jugador
+        lookScript.enabled = false; // Desactivar la rotación de la cámara del jugador
+        Cursor.lockState = CursorLockMode.None; // Liberar el cursor para inspección
+        Cursor.visible = true; // Hacer el cursor visible
 
-        if (Physics.Raycast(ray, out hit, interactionDistance))
-        {
-            if (hit.collider.gameObject.CompareTag("Inspectable")) // Asegúrate de que el objeto tenga el tag "Inspectable"
-            {
-                currentObject = hit.collider.gameObject;
-                originalPosition = currentObject.transform.position;
-                originalRotation = currentObject.transform.rotation;
-                currentObject.GetComponent<Rigidbody>().isKinematic = true;
-                currentObject.transform.position = inspectPosition.position;
-                currentObject.transform.rotation = inspectPosition.rotation;
-                isInspecting = true;
-                movementScript.enabled = false; // Desactivar el movimiento del jugador
-                lookScript.enabled = false; // Desactivar la rotación de la cámara del jugador
-                Cursor.lockState = CursorLockMode.None; // Liberar el cursor para inspección
-                Cursor.visible = true; // Hacer el cursor visible
+        // Desactivar el movimiento y la rotación del jugador
+        playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
-                // Desactivar el movimiento y la rotación del jugador
-                playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
-            }
-        }
+        inspectText.gameObject.SetActive(false); // Ocultar texto cuando se empieza a inspeccionar
     }
 
     void ReleaseObject()
