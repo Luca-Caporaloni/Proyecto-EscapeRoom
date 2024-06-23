@@ -5,6 +5,7 @@ public class MainMenu : MonoBehaviour
 {
 
     public string mapSceneName= "Phsiquiatra";
+    public string mainMenuSceneName = "MainMenu";
 
 
     public GameObject mainMenuUI;
@@ -14,7 +15,7 @@ public class MainMenu : MonoBehaviour
     public Camera menuCamera;
 
 
-    void Start()
+    void Start()    
     {
         menuCamera = Camera.main;
         mainMenuUI.SetActive(true);
@@ -35,8 +36,8 @@ public class MainMenu : MonoBehaviour
     public void Play()
     {
         mainMenuUI.SetActive(false);
-        Time.timeScale = 1f; 
-        SceneManager.LoadScene(mapSceneName);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mapSceneName, LoadSceneMode.Single);
     }
 
     public void Options()

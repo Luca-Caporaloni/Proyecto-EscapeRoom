@@ -5,6 +5,7 @@ public class PauseMenu : MonoBehaviour
 {
 
     public string mainMenuSceneName = "MainMenu";
+    public string inGameSceneName = "Phsiquiatra";
 
     public FirstPersonMovement movementScript; // Referencia al script de movimiento del jugador
     public FirstPersonLook lookScript; // Referencia al script de mirada del jugador
@@ -69,7 +70,7 @@ public class PauseMenu : MonoBehaviour
 
     public void MainMenu()
     {
-        Time.timeScale = 1f; 
-        SceneManager.LoadScene(mainMenuSceneName);
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mainMenuSceneName, LoadSceneMode.Single);
     }
 }
