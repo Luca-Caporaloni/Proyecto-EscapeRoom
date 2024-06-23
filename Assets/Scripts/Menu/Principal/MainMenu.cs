@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour
     public string mainMenuSceneName = "MainMenu";
 
 
+
     public GameObject mainMenuUI;
     public GameObject optionsMenuUI;
     public GameObject quitMenuUI;
@@ -66,6 +67,12 @@ public class MainMenu : MonoBehaviour
     public void CancelQuit()
     {
         quitMenuUI.SetActive(false);
+    }
+
+    public void ReturnMainMenu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(mainMenuSceneName, LoadSceneMode.Single);
     }
 }
 

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Inspectable
   - Liftable
+  - Card
   layers:
   - Default
   - TransparentFX
