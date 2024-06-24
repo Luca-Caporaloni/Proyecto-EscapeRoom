@@ -13,45 +13,78 @@ public class OpeningCinematic : MonoBehaviour
     public FirstPersonMovement movementScript; // Referencia al script de movimiento del jugador
     public FirstPersonLook lookScript; // Referencia al script de mirada del jugador
 
-    private string story = "Te encuentras atrapado en una misteriosa habitación...\n" +
+    public TextMeshProUGUI timerText; // Referencia al TextMeshPro del temporizador
+    public float timerDuration = 3600f; // Duración del temporizador en segundos (60 minutos)
+    public Animator timerAnimator; // Referencia al Animator del temporizador
+
+    private string story = "Despertaste en una habitación desconocida, con la extraña sensación de haber estado allí antes. \n" +
+                           "De a poco, los recuerdos vuelven: la electricidad, las quemaduras, horas frente a una proyección sin parpadear, solo una parte de las torturas sufridas.\n" +
+                           "Aún cegados por las luces, escuchan que alguien se retirará para almorzar. Tienen ese tiempo para descubrir el horror que les rodea y escapar.\n" +
                            "Encuentra la forma de salir antes de que sea demasiado tarde.";
 
     void Start()
     {
+        // movementScript.enabled = false; // Desactivar el movimiento del jugador
+        // lookScript.enabled = false; // Desactivar la rotación de la cámara del jugador
         StartCoroutine(TypeText());
     }
 
     IEnumerator TypeText()
     {
-        movementScript.enabled = false; // Desactivar el movimiento del jugador
-        lookScript.enabled = false; // Desactivar la rotación de la cámara del jugador
-
         cinematicText.text = "";
         foreach (char letter in story.ToCharArray())
         {
             cinematicText.text += letter;
             yield return new WaitForSeconds(typingSpeed);
         }
-        yield return new WaitForSeconds(2f); // Retraso antes de permitir el control del jugador
-        StartCoroutine(FadeOut()); // Iniciar el fade-out
+        yield return new WaitForSeconds(2f); // Retraso antes de mostrar el temporizador
+        StartCoroutine(StartTimer());
     }
 
-    IEnumerator FadeOut()
+    IEnumerator StartTimer()
+    {
+        timerText.gameObject.SetActive(true); // Mostrar el temporizador
+        StartCoroutine(FadeOutPanelAndText()); // Iniciar el fade-out del panel y el texto
+
+        float currentTime = timerDuration;
+        while (currentTime > 0)
+        {
+            currentTime -= Time.deltaTime;
+            int minutes = Mathf.FloorToInt(currentTime / 60);
+            int seconds = Mathf.FloorToInt(currentTime % 60);
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+            yield return null;
+        }
+
+        // Reproduce la animación del temporizador al final del conteo
+        timerAnimator.SetBool("Timer", true);
+
+        // Espera a que la animación termine
+        yield return new WaitForSeconds(fadeDuration);
+
+        // Reactivar el movimiento y la rotación del jugador
+        movementScript.enabled = true;
+        lookScript.enabled = true;
+    }
+
+    IEnumerator FadeOutPanelAndText()
     {
         float elapsedTime = 0f;
         Color panelColor = panelImage.color;
+        Color textColor = cinematicText.color;
 
         while (elapsedTime < fadeDuration)
         {
             elapsedTime += Time.deltaTime;
             float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
             panelImage.color = new Color(panelColor.r, panelColor.g, panelColor.b, alpha);
+            cinematicText.color = new Color(textColor.r, textColor.g, textColor.b, alpha);
             yield return null;
         }
 
         cinematicPanel.SetActive(false); // Ocultar el panel de la cinemática
 
-        movementScript.enabled = true; // Reactivar el movimiento del jugador
-        lookScript.enabled = true; // Reactivar la rotación de la cámara del jugador
+        timerAnimator.SetBool("Timer", true);
+
     }
 }
