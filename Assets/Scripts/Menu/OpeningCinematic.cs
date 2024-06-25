@@ -17,20 +17,51 @@ public class OpeningCinematic : MonoBehaviour
     public float timerDuration = 3600f; // Duración del temporizador en segundos (60 minutos)
     public Animator timerAnimator; // Referencia al Animator del temporizador
 
+    public PauseMenu pauseMenuScript; // Referencia al script de pausa
+    public InGameMenu inGameMenuScript; // Referencia al script de pausa
+
+    public Rigidbody playerRigidbody;
+    private RigidbodyConstraints originalConstraints;
+
+
+    private Coroutine typingCoroutine;
+
+    [SerializeField] private AudioSource tippingAudioSource; // Referencia al AudioSource de la puerta
+    [SerializeField] private AudioClip tippingSound; // Sonido de apertura de la puerta
+
+
+
     private string story = "Despertaste en una habitación desconocida, con la extraña sensación de haber estado allí antes. \n" +
                            "De a poco, los recuerdos vuelven: la electricidad, las quemaduras, horas frente a una proyección sin parpadear, solo una parte de las torturas sufridas.\n" +
-                           "Aún cegados por las luces, escuchan que alguien se retirará para almorzar. Tienen ese tiempo para descubrir el horror que les rodea y escapar.\n" +
+                           "Aún cegado por las luces, escuchas que alguien se retirará para almorzar. Tienes ese tiempo para descubrir el horror que te rodea y escapar.\n" +
                            "Encuentra la forma de salir antes de que sea demasiado tarde.";
 
     void Start()
     {
+
+        Cursor.lockState = CursorLockMode.None; // Liberar el cursor
+        Cursor.visible = true; // Hacer el cursor visible
+        pauseMenuScript.enabled = false; // Desactivar el script de pausa
+        inGameMenuScript.enabled = false;
+
+
         // movementScript.enabled = false; // Desactivar el movimiento del jugador
         // lookScript.enabled = false; // Desactivar la rotación de la cámara del jugador
+        originalConstraints = playerRigidbody.constraints;
+        playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
+
         StartCoroutine(TypeText());
     }
 
     IEnumerator TypeText()
     {
+
+        tippingAudioSource.PlayOneShot(tippingSound);
+
+        Cursor.lockState = CursorLockMode.None; // Liberar el cursor
+        Cursor.visible = true; // Hacer el cursor visible
+    
+
         cinematicText.text = "";
         foreach (char letter in story.ToCharArray())
         {
@@ -38,7 +69,7 @@ public class OpeningCinematic : MonoBehaviour
             yield return new WaitForSeconds(typingSpeed);
         }
         yield return new WaitForSeconds(2f); // Retraso antes de mostrar el temporizador
-        StartCoroutine(StartTimer());
+            StartCoroutine(StartTimer());
     }
 
     IEnumerator StartTimer()
@@ -65,6 +96,10 @@ public class OpeningCinematic : MonoBehaviour
         // Reactivar el movimiento y la rotación del jugador
         movementScript.enabled = true;
         lookScript.enabled = true;
+        pauseMenuScript.enabled = true; // Reactivar el script de pausa
+        inGameMenuScript.enabled = true;
+        Cursor.lockState = CursorLockMode.Locked; // Bloquear el cursor
+        Cursor.visible = false; // Hacer el cursor invisible
     }
 
     IEnumerator FadeOutPanelAndText()
@@ -83,8 +118,14 @@ public class OpeningCinematic : MonoBehaviour
         }
 
         cinematicPanel.SetActive(false); // Ocultar el panel de la cinemática
+        playerRigidbody.constraints = originalConstraints;
 
         timerAnimator.SetBool("Timer", true);
+
+        pauseMenuScript.enabled = true; // Reactivar el script de pausa
+        inGameMenuScript.enabled = true;
+        Cursor.lockState = CursorLockMode.Locked; // Bloquear el cursor
+        Cursor.visible = false;
 
     }
 }

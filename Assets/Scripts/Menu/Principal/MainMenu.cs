@@ -16,6 +16,9 @@ public class MainMenu : MonoBehaviour
 
     public Camera menuCamera;
 
+    [SerializeField] private AudioSource playAudioSource; // Referencia al AudioSource de la puerta
+    [SerializeField] private AudioClip playSound; // Sonido de apertura de la puerta
+
     void Start()
     {
         menuCamera = Camera.main;
@@ -36,6 +39,8 @@ public class MainMenu : MonoBehaviour
 
     public void Play()
     {
+        playAudioSource.PlayOneShot(playSound);
+
         fadeAnimator.SetBool("FadeOut", true);
         // mainMenuUI.SetActive(false);
         Time.timeScale = 1f;
