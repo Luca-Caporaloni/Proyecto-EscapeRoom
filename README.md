@@ -1,4 +1,4 @@
-# Proyecto EscapeRoom
+# Proyect EscapeRoom
 
 ## Relases
 
