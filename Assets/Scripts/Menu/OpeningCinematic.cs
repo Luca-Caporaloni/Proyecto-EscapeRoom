@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class OpeningCinematic : MonoBehaviour
 {
@@ -23,13 +24,8 @@ public class OpeningCinematic : MonoBehaviour
     public Rigidbody playerRigidbody;
     private RigidbodyConstraints originalConstraints;
 
-
-    private Coroutine typingCoroutine;
-
     [SerializeField] private AudioSource tippingAudioSource; // Referencia al AudioSource de la puerta
     [SerializeField] private AudioClip tippingSound; // Sonido de apertura de la puerta
-
-
 
     private string story = "Despertaste en una habitación desconocida, con la extraña sensación de haber estado allí antes. \n" +
                            "De a poco, los recuerdos vuelven: la electricidad, las quemaduras, horas frente a una proyección sin parpadear, solo una parte de las torturas sufridas.\n" +
@@ -38,15 +34,11 @@ public class OpeningCinematic : MonoBehaviour
 
     void Start()
     {
-
         Cursor.lockState = CursorLockMode.None; // Liberar el cursor
         Cursor.visible = true; // Hacer el cursor visible
         pauseMenuScript.enabled = false; // Desactivar el script de pausa
         inGameMenuScript.enabled = false;
 
-
-        // movementScript.enabled = false; // Desactivar el movimiento del jugador
-        // lookScript.enabled = false; // Desactivar la rotación de la cámara del jugador
         originalConstraints = playerRigidbody.constraints;
         playerRigidbody.constraints = RigidbodyConstraints.FreezeAll;
 
@@ -55,12 +47,10 @@ public class OpeningCinematic : MonoBehaviour
 
     IEnumerator TypeText()
     {
-
         tippingAudioSource.PlayOneShot(tippingSound);
 
         Cursor.lockState = CursorLockMode.None; // Liberar el cursor
         Cursor.visible = true; // Hacer el cursor visible
-    
 
         cinematicText.text = "";
         foreach (char letter in story.ToCharArray())
@@ -69,7 +59,7 @@ public class OpeningCinematic : MonoBehaviour
             yield return new WaitForSeconds(typingSpeed);
         }
         yield return new WaitForSeconds(2f); // Retraso antes de mostrar el temporizador
-            StartCoroutine(StartTimer());
+        StartCoroutine(StartTimer());
     }
 
     IEnumerator StartTimer()
@@ -93,13 +83,8 @@ public class OpeningCinematic : MonoBehaviour
         // Espera a que la animación termine
         yield return new WaitForSeconds(fadeDuration);
 
-        // Reactivar el movimiento y la rotación del jugador
-        movementScript.enabled = true;
-        lookScript.enabled = true;
-        pauseMenuScript.enabled = true; // Reactivar el script de pausa
-        inGameMenuScript.enabled = true;
-        Cursor.lockState = CursorLockMode.Locked; // Bloquear el cursor
-        Cursor.visible = false; // Hacer el cursor invisible
+        // Cambiar a la escena de Game Over o la que decidas
+        SceneManager.LoadScene("GameOverScene");
     }
 
     IEnumerator FadeOutPanelAndText()
@@ -126,6 +111,5 @@ public class OpeningCinematic : MonoBehaviour
         inGameMenuScript.enabled = true;
         Cursor.lockState = CursorLockMode.Locked; // Bloquear el cursor
         Cursor.visible = false;
-
     }
 }

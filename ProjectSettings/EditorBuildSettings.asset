@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/EscapeScene.unity
     guid: a3eb001653466ce4e80f19af54a65a50
+  - enabled: 1
+    path: Assets/Scenes/TimeOutScene.unity
+    guid: bcebd1d70d1dcbe4b8ca4d67ccd3e657
   m_configObjects: {}
