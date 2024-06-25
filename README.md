@@ -13,6 +13,7 @@ Funcionalidades principales
 
 ## Código - Keypad.cs
 
+'''
 public void EnterDigit(int digit)
     {
         displayText.text += digit.ToString();
@@ -38,6 +39,7 @@ public void EnterDigit(int digit)
         doorAnimator.SetBool("Open", false);
     }
 
+'''
 
 ## Características
 
