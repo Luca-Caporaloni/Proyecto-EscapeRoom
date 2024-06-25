@@ -24,8 +24,13 @@ public class OpeningCinematic : MonoBehaviour
     public Rigidbody playerRigidbody;
     private RigidbodyConstraints originalConstraints;
 
+    public string mainMenuSceneName = "TimeOutScene";
+
+
     [SerializeField] private AudioSource tippingAudioSource; // Referencia al AudioSource de la puerta
     [SerializeField] private AudioClip tippingSound; // Sonido de apertura de la puerta
+
+
 
     private string story = "Despertaste en una habitación desconocida, con la extraña sensación de haber estado allí antes. \n" +
                            "De a poco, los recuerdos vuelven: la electricidad, las quemaduras, horas frente a una proyección sin parpadear, solo una parte de las torturas sufridas.\n" +
@@ -84,7 +89,7 @@ public class OpeningCinematic : MonoBehaviour
         yield return new WaitForSeconds(fadeDuration);
 
         // Cambiar a la escena de Game Over o la que decidas
-        SceneManager.LoadScene("GameOverScene");
+        SceneManager.LoadScene(mainMenuSceneName, LoadSceneMode.Single);
     }
 
     IEnumerator FadeOutPanelAndText()
