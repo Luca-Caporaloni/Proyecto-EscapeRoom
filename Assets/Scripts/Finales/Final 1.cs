@@ -7,6 +7,8 @@ public class Final1 : MonoBehaviour
 {
     public float interactionDistance = 1f;
     public string escapeSceneName = "EscapeScene"; // Nombre de la escena de escape
+    public Animator doorAnimator; // Asigna el Animator de la puerta en el inspector
+    public string doorOpenAnimationName = "ExitDoorOpen"; // Nombre de la animación de apertura de la puerta
 
     private bool hasCard = false;
 
@@ -29,6 +31,10 @@ public class Final1 : MonoBehaviour
             {
                 CollectCard(hit.collider.gameObject);
             }
+            else if (hit.collider.CompareTag("ExitKeypad"))
+            {
+                TryOpenDoor(hit.collider.gameObject);
+            }
         }
     }
 
@@ -37,14 +43,34 @@ public class Final1 : MonoBehaviour
         // Realiza la acción de recoger la tarjeta
         hasCard = true;
         Destroy(card); // Eliminar la tarjeta del juego
-
-        // Iniciar la cuenta regresiva de 3 segundos para cambiar a la escena de escape
-        StartCoroutine(StartEscapeCountdown());
     }
 
-    IEnumerator StartEscapeCountdown()
+    void TryOpenDoor(GameObject keypad)
     {
-        yield return new WaitForSeconds(3f);
+        if (hasCard)
+        {
+            // Reproduce la animación de apertura de la puerta
+            if (doorAnimator != null)
+            {
+                doorAnimator.Play(doorOpenAnimationName);
+                StartCoroutine(WaitForDoorToOpen());
+            }
+            else
+            {
+                Debug.LogError("Animator de la puerta no asignado.");
+            }
+        }
+        else
+        {
+            Debug.Log("Necesitas una tarjeta para abrir esta puerta.");
+        }
+    }
+
+    IEnumerator WaitForDoorToOpen()
+    {
+        // Espera hasta que la animación termine (ajusta el tiempo según la duración de la animación)
+        yield return new WaitForSeconds(doorAnimator.GetCurrentAnimatorStateInfo(0).length);
+        // Cambia a la escena de escape
         SceneManager.LoadScene(escapeSceneName, LoadSceneMode.Single);
     }
 }

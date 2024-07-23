@@ -7,6 +7,7 @@ TagManager:
   - Inspectable
   - Liftable
   - Card
+  - ExitKeypad
   layers:
   - Default
   - TransparentFX

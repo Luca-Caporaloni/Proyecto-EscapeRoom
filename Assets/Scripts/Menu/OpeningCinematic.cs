@@ -25,12 +25,13 @@ public class OpeningCinematic : MonoBehaviour
     private RigidbodyConstraints originalConstraints;
 
     public string mainMenuSceneName = "TimeOutScene";
-
+    public string caughtSceneName = "CaughtScene"; // Nombre de la escena de atrapado
 
     [SerializeField] private AudioSource tippingAudioSource; // Referencia al AudioSource de la puerta
     [SerializeField] private AudioClip tippingSound; // Sonido de apertura de la puerta
 
-
+    public Animator doctorAnimator; // Referencia al Animator del doctor
+    public Animator doorAnimator; // Referencia al Animator de la puerta
 
     private string story = "Despertaste en una habitación desconocida, con la extraña sensación de haber estado allí antes. \n" +
                            "De a poco, los recuerdos vuelven: la electricidad, las quemaduras, horas frente a una proyección sin parpadear, solo una parte de las torturas sufridas.\n" +
@@ -73,12 +74,22 @@ public class OpeningCinematic : MonoBehaviour
         StartCoroutine(FadeOutPanelAndText()); // Iniciar el fade-out del panel y el texto
 
         float currentTime = timerDuration;
+        bool doctorAnimationStarted = false;
+
         while (currentTime > 0)
         {
             currentTime -= Time.deltaTime;
             int minutes = Mathf.FloorToInt(currentTime / 60);
             int seconds = Mathf.FloorToInt(currentTime % 60);
             timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
+            // Inicia la animación del doctor cuando queden 5 minutos
+            if (currentTime <= 20 && !doctorAnimationStarted)
+            {
+                doctorAnimationStarted = true;
+                StartDoctorAnimation();
+            }
+
             yield return null;
         }
 
@@ -88,8 +99,27 @@ public class OpeningCinematic : MonoBehaviour
         // Espera a que la animación termine
         yield return new WaitForSeconds(fadeDuration);
 
-        // Cambiar a la escena de Game Over o la que decidas
-        SceneManager.LoadScene(mainMenuSceneName, LoadSceneMode.Single);
+        // Cambiar a la escena de que te atraparon
+        SceneManager.LoadScene(caughtSceneName, LoadSceneMode.Single);
+    }
+
+    void StartDoctorAnimation()
+    {
+        // Activa la animación del doctor caminando
+        if (doctorAnimator != null)
+        {
+            doctorAnimator.SetBool("doctorwalk", true);
+        }
+    }
+
+    // Esta función será llamada al final de la animación de caminar del doctor
+    public void OnDoctorArrived()
+    {
+        // Activa la animación de apertura de la puerta
+        if (doorAnimator != null)
+        {
+            doorAnimator.SetBool("opendoor", true);
+        }
     }
 
     IEnumerator FadeOutPanelAndText()
