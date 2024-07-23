@@ -1,56 +1,29 @@
-# EscapeRoom Phsiquiatra
+# Proyect EscapeRoom
 
-## Uso
-
-Funcionalidades principales
-
-- Puzzles Interactivos: Los jugadores pueden interactuar con objetos del entorno para descubrir pistas.
-
-- Sistema de Inventario: Recolecta y utiliza objetos clave para avanzar en el juego.
-
-- Integración de Keypad: Introduce códigos en teclados virtuales para desbloquear puertas y obtener acceso a nuevas áreas.
+## Relases
 
 
-## Código - Keypad.cs
 
-public void EnterDigit(int digit)
-    {
-        displayText.text += digit.ToString();
-    }
+## Use
 
-    public void SubmitCode()
-    {
-        if (displayText.text == correctCode)
-        {
-            displayText.text = "Correcto";
-            doorAnimator.SetBool("Open", true);
-            StartCoroutine(CloseDoor());
-        }
-        else
-        {
-            displayText.text = "Incorrecto";
-        }
-    }
+Main features
 
-    private IEnumerator CloseDoor()
-    {
-        yield return new WaitForSeconds(2f);
-        doorAnimator.SetBool("Open", false);
-    }
+- Interactive Puzzles: Players can interact with objects in the environment to discover clues.
+
+- Inventory System: Collect and use key items to advance in the game.
+
+- Keypad Integration: Enter codes on virtual keyboards to unlock doors and gain access to new areas.
+  
+
+## Characteristics
+
+- Realistic Sound System: Sound effects that improve the atmosphere and immersion of the game.
+
+- Detailed Settings: Detailed rooms and environments with high-quality graphics.
 
 
-## Características
+## Contributions
 
-- Sistema de Sonido Realista: Efectos de sonido que mejoran la atmósfera y la inmersión del juego.
-
-- Escenarios Detallados: Habitaciones y entornos detallados con gráficos de alta calidad.
+We welcome contributions via pull requests. For major changes, first open an issue to discuss what you would like to change.
 
 
-## Contribución
-
-Agradecemos contribuciones via pull requests. Para cambios importantes, abra primero un issue para discutir lo que le gustaría cambiar.
-
-
-## Agradecimientos
-
-Gracias Lucas Briozzo por darme la idea.
